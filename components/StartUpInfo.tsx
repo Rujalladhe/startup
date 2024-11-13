@@ -1,13 +1,18 @@
+"use client"
+import { notFound } from 'next/navigation';
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Calendar, Tag, Rocket, Lightbulb, ArrowRight } from 'lucide-react';
+import { Author, Startup } from '@/sanity/types';
+export type startUpTypeCard = Omit<Startup, "author">&{ author?:Author}
 
+// export const experimental_ppr = true;
 
+const StartupInfo= ({post}:{post:any}) => {
+    if (!post) return notFound();
+  
 
-
-
-function App() {
-    return (
+      return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50">
             {/* Hero Section */}
             <div className="relative h-[70vh] bg-gradient-to-br from-blue-600 to-purple-700">
@@ -133,4 +138,6 @@ function App() {
     );
 }
 
-export default App;
+
+
+export default StartupInfo;
