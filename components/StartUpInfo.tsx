@@ -10,11 +10,8 @@ import { fetchViews } from './viewsFetcher';
 
 export type startUpTypeCard = Omit<Startup, 'author'> & { author?: Author };
 
-const StartupInfo = async ({ post }: { post: any }) => {
-  if (!post) return notFound();
-
-  // Fetch views using the helper function
-  const totalviews = await fetchViews(post._id);
+const StartupInfo =  ({ post }: { post: any }) => {
+ 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50">
@@ -57,10 +54,7 @@ const StartupInfo = async ({ post }: { post: any }) => {
               <Calendar className="w-4 h-4" />
               {new Date(post._createdAt).toLocaleDateString()}
             </span>
-            <span className="flex items-center gap-2 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-full text-blue-700 border border-blue-100">
-              <Eye className="w-4 h-4" />
-              <Views totalviews={totalviews} />
-            </span>
+        
           </div>
         </div>
       </motion.div>

@@ -1,193 +1,427 @@
-import React from 'react';
-import { Calendar, Tag, Rocket, Lightbulb, ArrowRight } from 'lucide-react';
-import { cn } from '@lib/utils';
+"use client";
+import React from "react";
+import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
+const World = dynamic(() => import("@/components/ui/globe").then(m => m.deafult), {
+     ssr: false,
+   });
+export function GlobeDemo() {
+  const globeConfig = {
+    pointSize: 4,
+    globeColor: "#062056",
+    showAtmosphere: true,
+    atmosphereColor: "#FFFFFF",
+    atmosphereAltitude: 0.1,
+    emissive: "#062056",
+    emissiveIntensity: 0.1,
+    shininess: 0.9,
+    polygonColor: "rgba(255,255,255,0.7)",
+    ambientLight: "#38bdf8",
+    directionalLeftLight: "#ffffff",
+    directionalTopLight: "#ffffff",
+    pointLight: "#ffffff",
+    arcTime: 1000,
+    arcLength: 0.9,
+    rings: 1,
+    maxRings: 3,
+    initialPosition: { lat: 22.3193, lng: 114.1694 },
+    autoRotate: true,
+    autoRotateSpeed: 0.5,
+  };
+  const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
+  const sampleArcs = [
+    {
+      order: 1,
+      startLat: -19.885592,
+      startLng: -43.951191,
+      endLat: -22.9068,
+      endLng: -43.1729,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 1,
+      startLat: 28.6139,
+      startLng: 77.209,
+      endLat: 3.139,
+      endLng: 101.6869,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 1,
+      startLat: -19.885592,
+      startLng: -43.951191,
+      endLat: -1.303396,
+      endLng: 36.852443,
+      arcAlt: 0.5,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 2,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: 35.6762,
+      endLng: 139.6503,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 2,
+      startLat: 51.5072,
+      startLng: -0.1276,
+      endLat: 3.139,
+      endLng: 101.6869,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 2,
+      startLat: -15.785493,
+      startLng: -47.909029,
+      endLat: 36.162809,
+      endLng: -115.119411,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 3,
+      startLat: -33.8688,
+      startLng: 151.2093,
+      endLat: 22.3193,
+      endLng: 114.1694,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 3,
+      startLat: 21.3099,
+      startLng: -157.8581,
+      endLat: 40.7128,
+      endLng: -74.006,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 3,
+      startLat: -6.2088,
+      startLng: 106.8456,
+      endLat: 51.5072,
+      endLng: -0.1276,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 4,
+      startLat: 11.986597,
+      startLng: 8.571831,
+      endLat: -15.595412,
+      endLng: -56.05918,
+      arcAlt: 0.5,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 4,
+      startLat: -34.6037,
+      startLng: -58.3816,
+      endLat: 22.3193,
+      endLng: 114.1694,
+      arcAlt: 0.7,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 4,
+      startLat: 51.5072,
+      startLng: -0.1276,
+      endLat: 48.8566,
+      endLng: -2.3522,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 5,
+      startLat: 14.5995,
+      startLng: 120.9842,
+      endLat: 51.5072,
+      endLng: -0.1276,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 5,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: -33.8688,
+      endLng: 151.2093,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 5,
+      startLat: 34.0522,
+      startLng: -118.2437,
+      endLat: 48.8566,
+      endLng: -2.3522,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 6,
+      startLat: -15.432563,
+      startLng: 28.315853,
+      endLat: 1.094136,
+      endLng: -63.34546,
+      arcAlt: 0.7,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 6,
+      startLat: 37.5665,
+      startLng: 126.978,
+      endLat: 35.6762,
+      endLng: 139.6503,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 6,
+      startLat: 22.3193,
+      startLng: 114.1694,
+      endLat: 51.5072,
+      endLng: -0.1276,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 7,
+      startLat: -19.885592,
+      startLng: -43.951191,
+      endLat: -15.595412,
+      endLng: -56.05918,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 7,
+      startLat: 48.8566,
+      startLng: -2.3522,
+      endLat: 52.52,
+      endLng: 13.405,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 7,
+      startLat: 52.52,
+      startLng: 13.405,
+      endLat: 34.0522,
+      endLng: -118.2437,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 8,
+      startLat: -8.833221,
+      startLng: 13.264837,
+      endLat: -33.936138,
+      endLng: 18.436529,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 8,
+      startLat: 49.2827,
+      startLng: -123.1207,
+      endLat: 52.3676,
+      endLng: 4.9041,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 8,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: 40.7128,
+      endLng: -74.006,
+      arcAlt: 0.5,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 9,
+      startLat: 51.5072,
+      startLng: -0.1276,
+      endLat: 34.0522,
+      endLng: -118.2437,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 9,
+      startLat: 22.3193,
+      startLng: 114.1694,
+      endLat: -22.9068,
+      endLng: -43.1729,
+      arcAlt: 0.7,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 9,
+      startLat: 1.3521,
+      startLng: 103.8198,
+      endLat: -34.6037,
+      endLng: -58.3816,
+      arcAlt: 0.5,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 10,
+      startLat: -22.9068,
+      startLng: -43.1729,
+      endLat: 28.6139,
+      endLng: 77.209,
+      arcAlt: 0.7,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 10,
+      startLat: 34.0522,
+      startLng: -118.2437,
+      endLat: 31.2304,
+      endLng: 121.4737,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 10,
+      startLat: -6.2088,
+      startLng: 106.8456,
+      endLat: 52.3676,
+      endLng: 4.9041,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 11,
+      startLat: 41.9028,
+      startLng: 12.4964,
+      endLat: 34.0522,
+      endLng: -118.2437,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 11,
+      startLat: -6.2088,
+      startLng: 106.8456,
+      endLat: 31.2304,
+      endLng: 121.4737,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 11,
+      startLat: 22.3193,
+      startLng: 114.1694,
+      endLat: 1.3521,
+      endLng: 103.8198,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 12,
+      startLat: 34.0522,
+      startLng: -118.2437,
+      endLat: 37.7749,
+      endLng: -122.4194,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 12,
+      startLat: 35.6762,
+      startLng: 139.6503,
+      endLat: 22.3193,
+      endLng: 114.1694,
+      arcAlt: 0.2,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 12,
+      startLat: 22.3193,
+      startLng: 114.1694,
+      endLat: 34.0522,
+      endLng: -118.2437,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 13,
+      startLat: 52.52,
+      startLng: 13.405,
+      endLat: 22.3193,
+      endLng: 114.1694,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 13,
+      startLat: 11.986597,
+      startLng: 8.571831,
+      endLat: 35.6762,
+      endLng: 139.6503,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 13,
+      startLat: -22.9068,
+      startLng: -43.1729,
+      endLat: -34.6037,
+      endLng: -58.3816,
+      arcAlt: 0.1,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+    {
+      order: 14,
+      startLat: -33.936138,
+      startLng: 18.436529,
+      endLat: 21.395643,
+      endLng: 39.883798,
+      arcAlt: 0.3,
+      color: colors[Math.floor(Math.random() * (colors.length - 1))],
+    },
+  ];
 
-
-
-interface Author {
-    _id: string;
-    name: string;
-    username: string;
-    image: string;
-    bio: string;
-}
-
-interface Startup {
-    _id: string;
-    title: string;
-    slug: string;
-    description: string;
-    category: string;
-    image: string;
-    pitch: string;
-    _createdAt: string;
-    author: Author;
-}
-
-// Example data
-const mockStartup: Startup = {
-    _id: "1",
-    title: "EcoTech Solutions",
-    slug: "ecotech-solutions",
-    description: "EcoTech Solutions is revolutionizing the way we approach environmental sustainability through innovative technology. Our platform combines AI-driven analytics with IoT sensors to help businesses reduce their carbon footprint while maximizing operational efficiency.",
-    category: "CleanTech",
-    image: "https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&q=80",
-    pitch: "We're building the future of sustainable business operations. Our AI-powered platform provides real-time insights and actionable recommendations that have helped our clients reduce energy consumption by an average of 40% while improving their bottom line.",
-    _createdAt: "2024-03-14T12:00:00Z",
-    author: {
-        _id: "auth1",
-        name: "Sarah Chen",
-        username: "sarahchen",
-        image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80",
-        bio: "Serial entrepreneur passionate about sustainability and technology. Previously founded GreenWave (acquired 2022). MIT graduate with 10+ years in cleantech."
-    }
-};
-
-function Button({ className, children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
-    return (
-        <button
-            className={cn(
-                "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
-                className
-            )}
-            {...props}
+  return (
+    <div className="flex flex-row items-center justify-center py-20 h-screen md:h-auto dark:bg-black bg-white relative w-full">
+      <div className="max-w-7xl mx-auto w-full relative overflow-hidden h-full md:h-[40rem] px-4">
+        <motion.div
+          initial={{
+            opacity: 0,
+            y: 20,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            duration: 1,
+          }}
+          className="div"
         >
-            {children}
-        </button>
-    );
-}
-
-function Badge({ className, children }: { className?: string; children: React.ReactNode }) {
-    return (
-        <span className={cn(
-            "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
-            className
-        )}>
-      {children}
-    </span>
-    );
-}
-
-function Card({ className, children }: { className?: string; children: React.ReactNode }) {
-    return (
-        <div className={cn(
-            "rounded-xl border bg-card text-card-foreground shadow",
-            className
-        )}>
-            {children}
+          <h2 className="text-center text-xl md:text-4xl font-bold text-black dark:text-white">
+            We sell soap worldwide
+          </h2>
+          <p className="text-center text-base md:text-lg font-normal text-neutral-700 dark:text-neutral-200 max-w-md mt-2 mx-auto">
+            This globe is interactive and customizable. Have fun with it, and
+            don&apos;t forget to share it. :)
+          </p>
+        </motion.div>
+        <div className="absolute w-full bottom-0 inset-x-0 h-40 bg-gradient-to-b pointer-events-none select-none from-transparent dark:to-black to-white z-40" />
+        <div className="absolute w-full -bottom-20 h-72 md:h-full z-10">
+          <World data={sampleArcs} globeConfig={globeConfig} />
         </div>
-    );
+      </div>
+    </div>
+  );
 }
-
-function Avatar({ src, alt, className }: { src: string; alt: string; className?: string }) {
-    return (
-        <div className={cn("relative flex h-16 w-16 shrink-0 overflow-hidden rounded-full", className)}>
-            <img className="aspect-square h-full w-full" src={src} alt={alt} />
-        </div>
-    );
-}
-
-function App() {
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50">
-            {/* Hero Section */}
-            <div className="relative h-[70vh] bg-gradient-to-br from-blue-600 to-purple-700 overflow-hidden">
-                <div className="absolute inset-0">
-                    <img
-                        src={mockStartup.image}
-                        alt={mockStartup.title}
-                        className="w-full h-full object-cover mix-blend-overlay"
-                    />
-                </div>
-
-                <div className="relative h-full flex items-center justify-center">
-                    <div className="absolute inset-0 bg-gradient-to-b from-blue-900/40 via-blue-900/60 to-purple-900/80" />
-
-                    <div className="relative text-center px-4 max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4">
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-lg">
-                            {mockStartup.title}
-                        </h1>
-                    </div>
-                </div>
-            </div>
-
-            {/* Metadata Section */}
-            <div className="bg-white shadow-lg animate-in fade-in slide-in-from-top-4">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                    <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
-                        <Badge className="bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-blue-100">
-                            <Tag className="w-4 h-4 mr-1" />
-                            {mockStartup.category}
-                        </Badge>
-                        <Badge className="bg-gradient-to-r from-blue-50 to-purple-50 text-blue-700 border-blue-100">
-                            <Calendar className="w-4 h-4 mr-1" />
-                            {new Date(mockStartup._createdAt).toLocaleDateString()}
-                        </Badge>
-                    </div>
-                </div>
-            </div>
-
-            {/* Main Content */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-                <div className="grid lg:grid-cols-3 gap-8">
-                    {/* About and Pitch Section */}
-                    <div className="lg:col-span-2 space-y-6">
-                        <Card className="bg-gradient-to-br from-blue-50 via-white to-purple-50 p-8 border-blue-100/20 animate-in fade-in slide-in-from-bottom-4">
-                            <div className="flex items-center gap-3 mb-6">
-                                <Rocket className="w-6 h-6 text-blue-600" />
-                                <h2 className="text-2xl font-semibold text-gray-900">About</h2>
-                            </div>
-                            <p className="text-gray-600 leading-relaxed">
-                                {mockStartup.description}
-                            </p>
-                        </Card>
-
-                        <Card className="bg-gradient-to-br from-purple-50 via-white to-blue-50 p-8 border-purple-100/20 animate-in fade-in slide-in-from-bottom-4 delay-150">
-                            <div className="flex items-center gap-3 mb-6">
-                                <Lightbulb className="w-6 h-6 text-purple-600" />
-                                <h2 className="text-2xl font-semibold text-gray-900">Elevator Pitch</h2>
-                            </div>
-                            <p className="text-gray-600 leading-relaxed">
-                                {mockStartup.pitch}
-                            </p>
-                        </Card>
-                    </div>
-
-                    {/* Founder Card */}
-                    <div className="lg:col-start-3">
-                        <div className="sticky top-8">
-                            <Card className="bg-gradient-to-br from-white via-blue-50 to-purple-50 p-8 border-blue-100/20 animate-in fade-in slide-in-from-bottom-4 delay-300">
-                                <h3 className="text-xl font-semibold text-gray-900 mb-6">Meet the Founder</h3>
-
-                                <div className="flex items-start gap-4 mb-6">
-                                    <Avatar
-                                        src={mockStartup.author.image}
-                                        alt={mockStartup.author.name}
-                                        className="ring-2 ring-blue-100"
-                                    />
-                                    <div>
-                                        <h4 className="font-semibold text-gray-900">{mockStartup.author.name}</h4>
-                                        <p className="text-blue-600">@{mockStartup.author.username}</p>
-                                    </div>
-                                </div>
-
-                                <p className="text-gray-600 text-sm leading-relaxed mb-6">
-                                    {mockStartup.author.bio}
-                                </p>
-
-                                <Button
-                                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:shadow-lg transition-shadow group"
-                                >
-                                    Connect with Founder
-                                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
-                                </Button>
-                            </Card>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-export default App;

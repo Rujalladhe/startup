@@ -1,0 +1,8 @@
+/* Scale up the MacbookScroll component */
+.macbook-scroll {
+    width: 80vw;  /* Makes it 80% of the viewport width */
+    height: 80vh; /* Makes it 80% of the viewport height */
+    max-width: 1200px; /* Optional: Set a max width if needed */
+    max-height: 900px; /* Optional: Set a max height if needed */
+  }
+ 
