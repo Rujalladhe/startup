@@ -22,6 +22,6 @@ const incrementViews = async (id: string, currentViews: number) => {
     return newViews;  // Return the incremented views count
   } catch (error) {
     console.error("Error incrementing views:", error);
-    return currentViews;  // In case of an error, return the original count
+    return currentViews;  // In case of an error, return the original countop
   }
 };
