@@ -4,6 +4,7 @@ import { ContentCard, startUpTypeCard } from "@/components/ContentCard";
 import { client } from "@/sanity/lib/client";
 import { STARTUPS_QUERY } from "@/sanity/lib/queries";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
+import { auth } from "@/auth";
 
 export default async function Home({ searchParams }: { searchParams: Promise<{ query?: string }>; }) {
   const query = (await searchParams).query;
@@ -24,7 +25,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ q
   //     title: "We Robots",
   //   }
   // ];
-
+  const session = await auth();
+  console.log(session?.id)
   return (
     <div className="p-8">
       <h1 className="text-2xl font-bold text-center mb-6">
