@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import MDEditor from "@uiw/react-md-editor";
@@ -10,6 +10,7 @@ import { formSchema } from "@/lib/validation";
 import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
+import { createPitch } from "@/lib/actions";
 
 const StartupForm = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -17,168 +18,169 @@ const StartupForm = () => {
   const { toast } = useToast();
   const router = useRouter();
 
-  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    const formValues = {
-      title: formData.get("title") as string,
-      description: formData.get("description") as string,
-      category: formData.get("category") as string,
-      link: formData.get("link") as string,
-      pitch,
-    };
-
-    console.log("Form Values:", formValues);
-
+  const handleFormSubmit = async (prevState: any, formData: FormData) => {
     try {
-      // Validate form values using zod
+      const formValues = {
+        title: formData.get("title") as string,
+        description: formData.get("description") as string,
+        category: formData.get("category") as string,
+        link: formData.get("link") as string,
+        pitch,
+      };
+
       await formSchema.parseAsync(formValues);
 
-      // Simulate successful API response
-      const result = { status: "SUCCESS", _id: "123" };
+      const result = await createPitch(prevState, formData, pitch);
 
-      if (result.status === "SUCCESS") {
+      if (result.status == "SUCCESS") {
         toast({
           title: "Success",
-          description: "Your startup pitch has been created successfully!",
+          description: "Your startup pitch has been created successfully",
         });
 
         router.push(`/startup/${result._id}`);
       }
+
+      return result;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors = error.flatten().fieldErrors;
-        setErrors(fieldErrors as unknown as Record<string, string>);
+        const fieldErorrs = error.flatten().fieldErrors;
+
+        setErrors(fieldErorrs as unknown as Record<string, string>);
+
         toast({
           title: "Error",
-          description: "Please check your inputs and try again.",
+          description: "Please check your inputs and try again",
           variant: "destructive",
         });
-      } else {
-        toast({
-          title: "Error",
-          description: "An unexpected error occurred. Please try again.",
-          variant: "destructive",
-        });
+
+        return { ...prevState, error: "Validation failed", status: "ERROR" };
       }
+
+      toast({
+        title: "Error",
+        description: "An unexpected error has occurred",
+        variant: "destructive",
+      });
+
+      return {
+        ...prevState,
+        error: "An unexpected error has occurred",
+        status: "ERROR",
+      };
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex items-center justify-center p-6">
-      <form
-        onSubmit={handleFormSubmit}
-        className="w-full max-w-3xl p-8 space-y-6 bg-white rounded-lg shadow-lg"
-      >
-        <h1 className="text-center text-3xl font-bold text-gray-800">
-          Submit Your Startup Pitch
-        </h1>
+  const [state, formAction, isPending] = useActionState(handleFormSubmit, {
+    error: "",
+    status: "INITIAL",
+  });
 
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+      <form
+        action={formAction}
+        className="bg-white rounded-lg shadow-lg p-8 w-full max-w-2xl"
+      >
         <div>
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="title" className="block text-gray-700 font-medium mb-2">
             Title
           </label>
           <Input
             id="title"
             name="title"
-            className="w-full mt-2 p-3 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="startup-form_input"
+            required
             placeholder="Startup Title"
           />
-          {errors.title && (
-            <p className="mt-1 text-sm text-red-600">{errors.title}</p>
-          )}
+          {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
         </div>
 
-        <div>
+        <div className="mt-4">
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-gray-700 font-medium mb-2"
           >
             Description
           </label>
           <Textarea
             id="description"
             name="description"
-            rows={4}
-            className="w-full mt-2 p-3 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Describe your startup idea"
+            className="startup-form_textarea"
+            required
+            placeholder="Startup Description"
           />
           {errors.description && (
-            <p className="mt-1 text-sm text-red-600">{errors.description}</p>
+            <p className="text-red-500 text-sm mt-1">{errors.description}</p>
           )}
         </div>
 
-        <div>
+        <div className="mt-4">
           <label
             htmlFor="category"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-gray-700 font-medium mb-2"
           >
             Category
           </label>
           <Input
             id="category"
             name="category"
-            className="w-full mt-2 p-3 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="E.g., Tech, Health, Education..."
+            className="startup-form_input"
+            required
+            placeholder="Startup Category (Tech, Health, Education...)"
           />
           {errors.category && (
-            <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+            <p className="text-red-500 text-sm mt-1">{errors.category}</p>
           )}
         </div>
 
-        <div>
+        <div className="mt-4">
           <label
             htmlFor="link"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-gray-700 font-medium mb-2"
           >
             Image URL
           </label>
           <Input
             id="link"
             name="link"
-            className="w-full mt-2 p-3 border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Provide an image URL"
+            className="startup-form_input"
+            required
+            placeholder="Startup Image URL"
           />
-          {errors.link && (
-            <p className="mt-1 text-sm text-red-600">{errors.link}</p>
-          )}
+          {errors.link && <p className="text-red-500 text-sm mt-1">{errors.link}</p>}
         </div>
 
-        <div>
-          <label
-            htmlFor="pitch"
-            className="block text-sm font-medium text-gray-700"
-          >
+        <div className="mt-4">
+          <label htmlFor="pitch" className="block text-gray-700 font-medium mb-2">
             Pitch
           </label>
-          <MDEditor
-            value={pitch}
-            onChange={(value) => setPitch(value as string)}
-            id="pitch"
-            preview="edit"
-            height={200}
-            className="mt-2 border-gray-300 rounded-lg shadow-sm"
-            textareaProps={{
-              placeholder: "Write your pitch here...",
-            }}
-            previewOptions={{
-              disallowedElements: ["style"],
-            }}
-          />
-          {errors.pitch && (
-            <p className="mt-1 text-sm text-red-600">{errors.pitch}</p>
-          )}
+          <div data-color-mode="light">
+            <MDEditor
+              value={pitch}
+              onChange={(value) => setPitch(value as string)}
+              id="pitch"
+              preview="edit"
+              height={300}
+              style={{ borderRadius: 10, overflow: "hidden" }}
+              textareaProps={{
+                placeholder:
+                  "Briefly describe your idea and what problem it solves",
+              }}
+              previewOptions={{
+                disallowedElements: ["style"],
+              }}
+            />
+          </div>
+          {errors.pitch && <p className="text-red-500 text-sm mt-1">{errors.pitch}</p>}
         </div>
 
         <Button
           type="submit"
-          className="w-full py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg shadow hover:bg-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-300"
+          className="startup-form_btn bg-blue-600 hover:bg-blue-700 text-white mt-6 w-full flex items-center justify-center"
+          disabled={isPending}
         >
-          Submit Your Pitch
+          {isPending ? "Submitting..." : "Submit Your Pitch"}
           <Send className="ml-2 w-5 h-5" />
         </Button>
       </form>
